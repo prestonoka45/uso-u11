@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="USO U11">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Icône pour l'écran d'accueil iPhone -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230f172a'/%3E%3Ccircle cx='90' cy='90' r='70' fill='%2310b981' opacity='0.15'/%3E%3Ctext x='90' y='88' font-family='sans-serif' font-weight='900' font-size='38' fill='%23ffffff' text-anchor='middle'%3EUSO%3C/text%3E%3Ctext x='90' y='130' font-family='sans-serif' font-weight='900' font-size='44' fill='%2310b981' text-anchor='middle'%3EU11%3C/text%3E%3C/svg%3E">
+  
+  <title>Coach USO U11</title>
+
+  <!-- Intégration Vercel Web Analytics & Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #090d16; color: #f1f5f9; padding-bottom: env(safe-area-inset-bottom, 30px); }
+    nav { background: #0f172a; border-bottom: 1px solid #1e293b; padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+    .logo { font-weight: 900; font-size: 18px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: #10b981; }
+    .save-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; }
+    .nav-tabs { display: flex; background: #1e293b; padding: 3px; border-radius: 8px; }
+    .nav-btn { padding: 6px 12px; border-radius: 6px; border: none; font-size: 11px; font-weight: bold; color: #94a3b8; background: transparent; cursor: pointer; }
+    .nav-btn.active { background: #10b981; color: white; }
+    
+    main { max-width: 500px; margin: 0 auto; padding: 12px; }
+    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    .card-title { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .title-green { color: #34d399; }
+    .title-yellow { color: #facc15; }
+    
+    .roster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 220px; overflow-y: auto; margin-bottom: 10px; }
+    .roster-btn { padding: 8px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; border: 1px solid #1e293b; background: #020617; color: #94a3b8; cursor: pointer; }
+    .roster-btn.selected { background: #064e3b; border-color: #10b981; color: #a7f3d0; }
+    
+    .add-player-row { display: flex; gap: 8px; padding-top: 8px; border-top: 1px solid #1e293b; }
+    .add-player-row input { flex: 1; background: #020617; border: 1px solid #334155; color: white; padding: 8px 10px; border-radius: 8px; font-size: 12px; user-select: text; -webkit-user-select: text; }
+    .add-player-row button { background: #1e293b; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+
+    .select-group { margin-bottom: 10px; background: #020617; padding: 10px; border-radius: 10px; border: 1px solid #1e293b; }
+    .select-label { font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    select { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 8px; border-radius: 8px; font-size: 12px; margin-top: 4px; }
+    
+    .btn-main { width: 100%; padding: 14px; background: #10b981; border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 14px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+    .btn-main:active { transform: scale(0.98); }
+    
+    .timer-box { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px 16px; border-radius: 16px; border: 1px solid #1e293b; margin-bottom: 12px; }
+    .time-display { font-size: 32px; font-family: monospace; font-weight: 900; color: #34d399; }
+    .timer-controls { display: flex; gap: 6px; }
+    .btn-timer { padding: 8px 12px; border-radius: 10px; border: none; font-weight: 800; font-size: 11px; color: white; cursor: pointer; }
+    .btn-start { background: #10b981; }
+    .btn-pause { background: #f59e0b; }
+    .btn-finish { background: #6366f1; }
+    .btn-reset { background: #334155; }
+
+    .pitch { position: relative; background: linear-gradient(to bottom, #15803d, #166534); border: 4px solid #14532d; border-radius: 24px; padding: 12px; min-height: 440px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+    .pitch-lines { position: absolute; inset: 0; opacity: 0.25; pointer-events: none; }
+    .line-half { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: white; transform: translateY(-50%); }
+    .circle-center { position: absolute; top: 50%; left: 50%; width: 90px; height: 90px; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); }
+
+    .row-players { display: flex; justify-content: center; gap: 8px; position: relative; z-index: 10; }
+    .p-card { width: 96px; background: white; color: #0f172a; border-radius: 10px; padding: 6px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer; position: relative; }
+    .p-card.selected { background: #facc15; border: 3px solid #fff; transform: scale(1.05); z-index: 30; }
+    .p-card.bench { background: #1e293b; color: white; border: 1px solid #334155; }
+    .p-name { font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .p-time { font-size: 10px; font-family: monospace; font-weight: bold; background: #f1f5f9; color: #334155; border-radius: 10px; padding: 1px 6px; display: inline-block; margin-top: 3px; }
+    .p-card.bench .p-time { background: #020617; color: #94a3b8; }
+    .p-badges { display: flex; justify-content: center; gap: 3px; margin-top: 3px; }
+    .badge { font-size: 9px; font-weight: bold; padding: 1px 4px; border-radius: 6px; color: white; }
+    .badge-g { background: #059669; }
+    .badge-a { background: #0284c7; }
+    
+    .stat-btns { display: flex; gap: 2px; margin-top: 4px; }
+    .btn-st { flex: 1; border: none; padding: 4px 0; border-radius: 4px; font-size: 9px; font-weight: bold; color: white; cursor: pointer; }
+    .btn-goal { background: #059669; }
+    .btn-ast { background: #0284c7; }
+
+    .bench-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 10px; margin-top: 12px; }
+    .bench-title { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+    .bench-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    th { background: #020617; color: #64748b; padding: 8px; font-size: 10px; text-transform: uppercase; }
+    td { padding: 10px 8px; border-bottom: 1px solid #1e293b; }
+
+    .export-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .btn-action { width: 100%; padding: 13px; border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-action:active { transform: scale(0.98); }
+    .btn-share { background: #10b981; }
+    .btn-csv { background: #0284c7; }
+    .btn-copy { background: #334155; }
+
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ef4444; color: white; padding: 10px 18px; border-radius: 12px; font-size: 12px; font-weight: bold; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: none; text-align: center; width: 90%; max-width: 400px; }
+    .toast.success { background: #10b981; }
+    
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal-box { background: #0f172a; border: 1px solid #334155; border-radius: 18px; padding: 22px; width: 100%; max-width: 340px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">USO <span>U11</span> <span class="save-dot" title="Sauvegarde active"></span></div>
+    <div class="nav-tabs" id="navTabs" style="display:none;">
+      <button class="nav-btn active" id="btnTabMatch" onclick="switchTab('match')">Direct</button>
+      <button class="nav-btn" id="btnTabStats" onclick="switchTab('stats')">Stats</button>
+    </div>
+  </nav>
+
+  <main id="app">
+    <!-- ÉCRAN CONFIGURATION -->
+    <div id="screenConfig">
+      <div class="card">
+        <div class="card-title title-green">1. Convoqués (<span id="countSelected">12</span>/13 joueurs)</div>
+        <div class="roster-grid" id="rosterList"></div>
+        <div class="add-player-row">
+          <input type="text" id="newPlayerInput" placeholder="Ajouter un joueur...">
+          <button onclick="addNewPlayer()">+ Ajouter</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title title-yellow">2. Composition du 8 de départ (1-3-3-1)</div>
+        <div class="select-group">
+          <span class="select-label" style="color:#facc15">Gardien (1)</span>
+          <select id="selGK"></select>
+        </div>
+        <div class="select-group">
+          <span class="select-label" style="color:#38bdf8">Défenseurs (3)</span>
+          <select id="selDEF1"></select>
+          <select id="selDEF2"></select>
+          <select id="selDEF3"></select>
+        </div>
+        <div class="select-group">
+          <span class="select-label" style="color:#34d399">Milieux (3)</span>
+          <select id="selMID1"></select>
+          <select id="selMID2"></select>
+          <select id="selMID3"></select>
+        </div>
+        <div class="select-group">
+          <span class="select-label" style="color:#fb7185">Attaquant (1)</span>
+          <select id="selATT"></select>
+        </div>
+
+        <button class="btn-main" onclick="startMatch()">▶ DÉMARRER LE MATCH</button>
+      </div>
+    </div>
+
+    <!-- ÉCRAN MATCH DIRECT -->
+    <div id="screenMatch" style="display:none;">
+      <div class="timer-box">
+        <div>
+          <div class="time-display" id="timerDisplay">00:00</div>
+          <div style="font-size:10px; color:#64748b; font-weight:bold;">TEMPS DE JEU (60 MIN)</div>
+        </div>
+        <div class="timer-controls">
+          <button class="btn-timer btn-start" id="btnTimerToggle" onclick="toggleTimer()">▶ LANCER</button>
+          <button class="btn-timer btn-finish" onclick="finishMatch(true)" title="Terminer le match">🏁 FIN</button>
+          <button class="btn-timer btn-reset" onclick="resetMatch()" title="Réinitialiser">🔄</button>
+        </div>
+      </div>
+
+      <div style="background:#0c4a6e; border:1px solid #0284c7; color:#bae6fd; padding:8px; border-radius:10px; font-size:11px; text-align:center; margin-bottom:10px;">
+        🔄 <strong>Changement :</strong> Touchez un joueur du terrain puis son remplaçant sur le banc.
+      </div>
+
+      <div class="pitch">
+        <div class="pitch-lines">
+          <div class="line-half"></div>
+          <div class="circle-center"></div>
+        </div>
+        <div class="row-players" id="rowATT"></div>
+        <div class="row-players" id="rowMID"></div>
+        <div class="row-players" id="rowDEF"></div>
+        <div class="row-players" id="rowGK"></div>
+      </div>
+
+      <div class="bench-box">
+        <div class="bench-title">Banc des Remplaçants (<span id="benchCount">0</span>)</div>
+        <div class="bench-grid" id="benchGrid"></div>
+      </div>
+    </div>
+
+    <!-- ÉCRAN STATISTIQUES & EXPORTS -->
+    <div id="screenStats" style="display:none;">
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table>
+          <thead>
+            <tr>
+              <th>Joueur</th>
+              <th style="text-align:center">Statut</th>
+              <th style="text-align:center">Temps</th>
+              <th style="text-align:center">Buts</th>
+              <th style="text-align:center">Passes</th>
+            </tr>
+          </thead>
+          <tbody id="statsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Bandeau statut sync Vercel -->
+      <div id="syncStatus" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:bold; margin-bottom:10px; border:1px solid rgba(255,255,255,0.1); text-align:center;"></div>
+
+      <div class="export-actions">
+        <button class="btn-action btn-share" onclick="shareMatchReport()">
+          📤 ENVOYER / PARTAGER (WhatsApp, Mail...)
+        </button>
+        <button class="btn-action btn-csv" onclick="downloadCSV()">
+          📊 TÉLÉCHARGER LE FICHIER CSV (EXCEL)
+        </button>
+        <button class="btn-action btn-copy" onclick="copyMatchReport()">
+          📋 COPIER LE TEXTE DU BILAN
+        </button>
+        <button class="btn-action" style="background:#6366f1;" onclick="saveMatchToVercel()">
+          🔄 RESYNCHRONISER AVEC LA BASE DE DONNÉES
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toastMsg" class="toast"></div>
+
+  <!-- Modale Fin de match & Export -->
+  <div id="finishModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size:28px; margin-bottom:6px;">🏁</div>
+      <div style="font-weight:bold; font-size:16px; color:white;">Match Terminé !</div>
+      <div style="font-size:12px; color:#94a3b8; margin:8px 0 16px 0;">Les temps de jeu sont enregistrés. Tu peux envoyer le bilan ou télécharger le fichier.</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn-action btn-share" onclick="closeFinishModal(); shareMatchReport();">📤 Envoyer (WhatsApp, Mail)</button>
+        <button class="btn-action btn-csv" onclick="downloadCSV();">📊 Télécharger fichier CSV</button>
+        <button style="background:#334155; color:white; padding:10px; border-radius:10px; border:none; font-weight:bold; font-size:12px; cursor:pointer;" onclick="closeFinishModal()">Voir le tableau</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale Réinitialisation -->
+  <div id="confirmModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-weight:bold; font-size:14px; color:white;">Réinitialiser le match ?</div>
+      <div style="font-size:12px; color:#94a3b8; margin-top:6px;">Les temps de jeu seront remis à zéro.</div>
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button style="flex:1; background:#334155; color:white; padding:10px; border-radius:10px; border:none; font-weight:bold;" onclick="closeModal()">Annuler</button>
+        <button style="flex:1; background:#ef4444; color:white; padding:10px; border-radius:10px; border:none; font-weight:bold;" onclick="confirmReset()">Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const defaultRoster = [
+      "ACHBAB Hamza", "AFKIR Harun", "AMEZIANE Yassine", "AMLOUKA Oweis", 
+      "ASSADIKI Kais", "BAGHERI Bahram", "BALDE Elage", "BENALI Mohamed", 
+      "BENALI Nadir", "CAMARA SYLLA Vincent", "DARCY Raphael", "KAMANGA Rayan", 
+      "KEITA Ahmed", "LAAOUIDI Abdullah", "MAKAYA Elysée", "MAMODJEE Yassir", 
+      "MATOMBO Josué", "MOURA MENDES Léo", "SYLLA Cheick", "UJALELE Marshack", "ZADI Drey"
+    ];
+
+    let allRoster = [...defaultRoster];
+    let selectedRoster = defaultRoster.slice(0, 12);
+    let players = [];
+    let matchTime = 0;
+    let timerInterval = null;
+    let isTimerRunning = false;
+    let lastTickTimestamp = null;
+    let selectedPitchPlayerId = null;
+    let toastTimeout = null;
+
+    // Persistance double (LocalStorage + IndexedDB)
+    const DB_NAME = 'USO_U11_DB';
+    const STORE_NAME = 'matchState';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) return reject('No IndexedDB');
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => { e.target.result.createObjectStore(STORE_NAME); };
+        req.onsuccess = (e) => resolve(e.target.result);
+        req.onerror = (e) => reject(e);
+      });
+    }
+
+    function saveState() {
+      const state = {
+        matchStarted: document.getElementById('screenMatch').style.display === 'block' || document.getElementById('screenStats').style.display === 'block',
+        isTimerRunning,
+        matchTime,
+        lastTickTimestamp,
+        players,
+        selectedRoster
+      };
+      try { localStorage.setItem('uso_u11_coach_state', JSON.stringify(state)); } catch (e) {}
+      openDB().then(db => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(state, 'current');
+      }).catch(() => {});
+    }
+
+    function applyRestoredState(state) {
+      if (!state || !state.matchStarted) return false;
+      isTimerRunning = state.isTimerRunning;
+      matchTime = state.matchTime;
+      lastTickTimestamp = state.lastTickTimestamp;
+      players = state.players;
+      selectedRoster = state.selectedRoster;
+
+      document.getElementById('screenConfig').style.display = 'none';
+      document.getElementById('screenMatch').style.display = 'block';
+      document.getElementById('navTabs').style.display = 'flex';
+
+      if (isTimerRunning) {
+        document.getElementById('btnTimerToggle').textContent = '⏸ PAUSE';
+        document.getElementById('btnTimerToggle').className = 'btn-timer btn-pause';
+        clearInterval(timerInterval);
+        timerInterval = setInterval(syncClock, 250);
+        syncClock();
+      } else {
+        document.getElementById('timerDisplay').textContent = formatTime(matchTime);
+      }
+      renderPitch();
+      return true;
+    }
+
+    async function loadState() {
+      try {
+        const saved = localStorage.getItem('uso_u11_coach_state');
+        if (saved && applyRestoredState(JSON.parse(saved))) return true;
+      } catch (e) {}
+      try {
+        const db = await openDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const req = tx.objectStore(STORE_NAME).get('current');
+          req.onsuccess = () => resolve(applyRestoredState(req.result));
+          req.onerror = () => resolve(false);
+        });
+      } catch (e) { return false; }
+    }
+
+    function clearSavedState() {
+      try { localStorage.removeItem('uso_u11_coach_state'); } catch (e) {}
+      openDB().then(db => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).delete('current');
+      }).catch(() => {});
+    }
+
+    function showToast(msg, isSuccess = false) {
+      const t = document.getElementById('toastMsg');
+      t.textContent = msg;
+      t.className = 'toast' + (isSuccess ? ' success' : '');
+      t.style.display = 'block';
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function initConfig() {
+      document.getElementById('countSelected').textContent = selectedRoster.length;
+      const list = document.getElementById('rosterList');
+      list.innerHTML = '';
+
+      allRoster.forEach(name => {
+        const isSel = selectedRoster.includes(name);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'roster-btn' + (isSel ? ' selected' : '');
+        btn.innerHTML = `<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name}</span><span>${isSel ? '✅' : '➕'}</span>`;
+        btn.onclick = () => toggleRoster(name);
+        list.appendChild(btn);
+      });
+
+      const selectIds = ['selGK', 'selDEF1', 'selDEF2', 'selDEF3', 'selMID1', 'selMID2', 'selMID3', 'selATT'];
+      selectIds.forEach((id, idx) => {
+        const sel = document.getElementById(id);
+        const prevVal = sel.value;
+        sel.innerHTML = '<option value="">-- Choisir --</option>';
+        selectedRoster.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          sel.appendChild(opt);
+        });
+        if (prevVal && selectedRoster.includes(prevVal)) {
+          sel.value = prevVal;
+        } else if (selectedRoster[idx]) {
+          sel.value = selectedRoster[idx];
+        }
+      });
+    }
+
+    function addNewPlayer() {
+      const input = document.getElementById('newPlayerInput');
+      const name = input.value.trim();
+      if (!name) return;
+      if (!allRoster.includes(name)) allRoster.push(name);
+      if (!selectedRoster.includes(name) && selectedRoster.length < 13) selectedRoster.push(name);
+      input.value = '';
+      initConfig();
+      saveState();
+    }
+
+    function toggleRoster(name) {
+      if (selectedRoster.includes(name)) {
+        if (selectedRoster.length <= 8) return showToast("Minimum 8 joueurs requis !");
+        selectedRoster = selectedRoster.filter(n => n !== name);
+      } else {
+        if (selectedRoster.length >= 13) return showToast("Maximum 13 joueurs !");
+        selectedRoster.push(name);
+      }
+      initConfig();
+      saveState();
+    }
+
+    function startMatch() {
+      const gk = document.getElementById('selGK').value;
+      const defs = [document.getElementById('selDEF1').value, document.getElementById('selDEF2').value, document.getElementById('selDEF3').value].filter(Boolean);
+      const mids = [document.getElementById('selMID1').value, document.getElementById('selMID2').value, document.getElementById('selMID3').value].filter(Boolean);
+      const att = document.getElementById('selATT').value;
+
+      if (!gk || defs.length !== 3 || mids.length !== 3 || !att) {
+        return showToast("Sélectionnez bien les 8 titulaires.");
+      }
+
+      const allSelected = [gk, ...defs, ...mids, att];
+      if (new Set(allSelected).size !== 8) {
+        return showToast("Attention : un même joueur est sélectionné deux fois !");
+      }
+
+      players = selectedRoster.map((name, idx) => {
+        let zone = 'BENCH';
+        let isOnPitch = false;
+        if (name === gk) { zone = 'GK'; isOnPitch = true; }
+        else if (defs.includes(name)) { zone = 'DEF'; isOnPitch = true; }
+        else if (mids.includes(name)) { zone = 'MID'; isOnPitch = true; }
+        else if (name === att) { zone = 'ATT'; isOnPitch = true; }
+
+        return { id: idx + 1, name, zone, isOnPitch, timePlayed: 0, goals: 0, assists: 0 };
+      });
+
+      document.getElementById('screenConfig').style.display = 'none';
+      document.getElementById('screenMatch').style.display = 'block';
+      document.getElementById('navTabs').style.display = 'flex';
+      renderPitch();
+      saveState();
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('btnTimerToggle');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        lastTickTimestamp = null;
+        btn.textContent = '▶ LANCER';
+        btn.className = 'btn-timer btn-start';
+      } else {
+        isTimerRunning = true;
+        lastTickTimestamp = Date.now();
+        btn.textContent = '⏸ PAUSE';
+        btn.className = 'btn-timer btn-pause';
+        timerInterval = setInterval(syncClock, 250);
+      }
+      saveState();
+    }
+
+    function syncClock() {
+      if (!isTimerRunning || !lastTickTimestamp) return;
+      const now = Date.now();
+      const elapsedSeconds = Math.floor((now - lastTickTimestamp) / 1000);
+
+      if (elapsedSeconds >= 1) {
+        lastTickTimestamp += elapsedSeconds * 1000;
+        const remaining = 3600 - matchTime;
+        const delta = Math.min(elapsedSeconds, remaining);
+
+        if (delta > 0) {
+          matchTime += delta;
+          players.forEach(p => { if (p.isOnPitch) p.timePlayed += delta; });
+          document.getElementById('timerDisplay').textContent = formatTime(matchTime);
+          renderPitch();
+          if (document.getElementById('screenStats').style.display === 'block') {
+            renderStats();
+          }
+          saveState();
+        }
+
+        if (matchTime >= 3600) {
+          finishMatch(false);
+        }
+      }
+    }
+
+    // ─── ENVOI AUTOMATIQUE VERS VERCEL ─────────────────────────────────
+    // Remplace cette URL par ton URL Vercel une fois le projet déployé
+    // Ex: 'https://uso-u11.vercel.app/api/save-match'
+    const VERCEL_API_URL = window.location.origin + '/api/save-match';
+
+    async function saveMatchToVercel() {
+      const statusEl = document.getElementById('syncStatus');
+      statusEl.style.display = 'flex';
+      statusEl.innerHTML = '🔄 Envoi vers la base de données...';
+      statusEl.style.background = '#1e3a5f';
+      statusEl.style.color = '#93c5fd';
+
+      const today = new Date().toISOString().split('T')[0];
+
+      try {
+        const response = await fetch(VERCEL_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            matchDate: today,
+            matchDuration: matchTime,
+            players: players
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          statusEl.innerHTML = '✅ Match sauvegardé dans la base de données !';
+          statusEl.style.background = '#064e3b';
+          statusEl.style.color = '#6ee7b7';
+        } else {
+          statusEl.innerHTML = '⚠️ Sauvegarde en ligne indisponible (données locales conservées)';
+          statusEl.style.background = '#451a03';
+          statusEl.style.color = '#fcd34d';
+        }
+      } catch (error) {
+        // Pas de connexion internet ou Vercel pas encore configuré
+        statusEl.innerHTML = '📱 Hors ligne — données sauvegardées localement';
+        statusEl.style.background = '#1e293b';
+        statusEl.style.color = '#94a3b8';
+      }
+    }
+
+    function finishMatch(manualTrigger = true) {
+      if (isTimerRunning) toggleTimer();
+      saveMatchToVercel(); // Envoi automatique dès la fin du match
+      document.getElementById('finishModal').style.display = 'flex';
+    }
+
+    function closeFinishModal() {
+      document.getElementById('finishModal').style.display = 'none';
+      switchTab('stats');
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && isTimerRunning) syncClock();
+    });
+
+    function resetMatch() {
+      document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('confirmModal').style.display = 'none';
+    }
+
+    function confirmReset() {
+      closeModal();
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      lastTickTimestamp = null;
+      matchTime = 0;
+      selectedPitchPlayerId = null;
+      document.getElementById('screenMatch').style.display = 'none';
+      document.getElementById('screenStats').style.display = 'none';
+      document.getElementById('navTabs').style.display = 'none';
+      document.getElementById('screenConfig').style.display = 'block';
+      document.getElementById('timerDisplay').textContent = '00:00';
+      document.getElementById('btnTimerToggle').textContent = '▶ LANCER';
+      document.getElementById('btnTimerToggle').className = 'btn-timer btn-start';
+      clearSavedState();
+      initConfig();
+    }
+
+    function handlePlayerClick(id) {
+      const p = players.find(x => x.id === id);
+      if (!p) return;
+      if (p.isOnPitch) {
+        selectedPitchPlayerId = (selectedPitchPlayerId === id) ? null : id;
+      } else {
+        if (selectedPitchPlayerId) {
+          const pitchP = players.find(x => x.id === selectedPitchPlayerId);
+          const targetZone = pitchP.zone;
+          pitchP.isOnPitch = false;
+          pitchP.zone = 'BENCH';
+          p.isOnPitch = true;
+          p.zone = targetZone;
+          selectedPitchPlayerId = null;
+        } else {
+          showToast("Touchez d'abord un joueur sur le terrain, puis son remplaçant.");
+        }
+      }
+      renderPitch();
+      saveState();
+    }
+
+    function addStat(id, type, event) {
+      event.stopPropagation();
+      const p = players.find(x => x.id === id);
+      if (p) {
+        p[type]++;
+        renderPitch();
+        saveState();
+      }
+    }
+
+    function createCard(p) {
+      const div = document.createElement('div');
+      const isSelected = selectedPitchPlayerId === p.id;
+      div.className = 'p-card' + (!p.isOnPitch ? ' bench' : '') + (isSelected ? ' selected' : '');
+      div.onclick = () => handlePlayerClick(p.id);
+
+      let badgesHtml = '';
+      if (p.goals > 0 || p.assists > 0) {
+        badgesHtml = `<div class="p-badges">
+          ${p.goals > 0 ? `<span class="badge badge-g">⚽ ${p.goals}</span>` : ''}
+          ${p.assists > 0 ? `<span class="badge badge-a">👟 ${p.assists}</span>` : ''}
+        </div>`;
+      }
+
+      let btnsHtml = '';
+      if (p.isOnPitch) {
+        btnsHtml = `<div class="stat-btns">
+          <button type="button" class="btn-st btn-goal" onclick="addStat(${p.id}, 'goals', event)">+ But</button>
+          <button type="button" class="btn-st btn-ast" onclick="addStat(${p.id}, 'assists', event)">+ Pas.</button>
+        </div>`;
+      }
+
+      div.innerHTML = `
+        <span class="p-name">${p.name}</span>
+        <span class="p-time">⏱ ${formatTime(p.timePlayed)}</span>
+        ${badgesHtml}
+        ${btnsHtml}
+      `;
+      return div;
+    }
+
+    function renderPitch() {
+      ['rowATT', 'rowMID', 'rowDEF', 'rowGK', 'benchGrid'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+
+      const benchPlayers = players.filter(p => !p.isOnPitch);
+      document.getElementById('benchCount').textContent = benchPlayers.length;
+
+      players.forEach(p => {
+        const card = createCard(p);
+        if (!p.isOnPitch) {
+          document.getElementById('benchGrid').appendChild(card);
+        } else {
+          document.getElementById('row' + p.zone).appendChild(card);
+        }
+      });
+    }
+
+    function renderStats() {
+      const tbody = document.getElementById('statsTableBody');
+      tbody.innerHTML = '';
+      const sorted = [...players].sort((a, b) => b.timePlayed - a.timePlayed);
+
+      sorted.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:bold; color:white;">${p.name}</td>
+          <td style="text-align:center;">
+            ${p.isOnPitch 
+              ? '<span style="color:#34d399; font-weight:bold; font-size:10px; background:#064e3b; padding:2px 6px; border-radius:8px;">Terrain</span>' 
+              : '<span style="color:#64748b; font-size:10px;">Banc</span>'}
+          </td>
+          <td style="text-align:center; font-family:monospace; font-weight:bold; color:#34d399;">${formatTime(p.timePlayed)}</td>
+          <td style="text-align:center; font-weight:bold;">${p.goals} ⚽</td>
+          <td style="text-align:center; font-weight:bold;">${p.assists} 👟</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function generateReportText() {
+      const sorted = [...players].sort((a, b) => b.timePlayed - a.timePlayed);
+      const today = new Date().toLocaleDateString('fr-FR');
+      let text = `⚽ BILAN MATCH USO U11 (${today})\n`;
+      text += `⏱ Durée totale : ${formatTime(matchTime)}\n\n`;
+      sorted.forEach(p => {
+        text += `• ${p.name} : ${formatTime(p.timePlayed)} | ${p.goals} but(s) | ${p.assists} passe(s)\n`;
+      });
+      return text;
+    }
+
+    function copyMatchReport() {
+      const text = generateReportText();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("✅ Bilan copié dans le presse-papier !", true);
+        }).catch(() => showToast("Copie manuelle requise."));
+      } else {
+        showToast("Copie non supportée.");
+      }
+    }
+
+    async function shareMatchReport() {
+      const text = generateReportText();
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Bilan Match USO U11',
+            text: text
+          });
+          showToast("✅ Bilan partagé avec succès !", true);
+        } catch (err) {}
+      } else {
+        copyMatchReport();
+        showToast("Partage direct indisponible, bilan copié pour WhatsApp !", true);
+      }
+    }
+
+    function downloadCSV() {
+      const sorted = [...players].sort((a, b) => b.timePlayed - a.timePlayed);
+      const today = new Date().toISOString().split('T')[0];
+      let csvContent = "\uFEFFJoueur;Statut;Temps (min:sec);Minutes jouees;Buts;Passes decisives\n";
+
+      sorted.forEach(p => {
+        const minutes = Math.round((p.timePlayed / 60) * 10) / 10;
+        csvContent += `"${p.name}";"${p.isOnPitch ? 'Terrain' : 'Banc'}";"${formatTime(p.timePlayed)}";${minutes};${p.goals};${p.assists}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `USO_U11_Match_${today}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("✅ Fichier CSV exporté !", true);
+    }
+
+    function switchTab(tab) {
+      document.getElementById('btnTabMatch').className = 'nav-btn' + (tab === 'match' ? ' active' : '');
+      document.getElementById('btnTabStats').className = 'nav-btn' + (tab === 'stats' ? ' active' : '');
+      document.getElementById('screenMatch').style.display = tab === 'match' ? 'block' : 'none';
+      document.getElementById('screenStats').style.display = tab === 'stats' ? 'block' : 'none';
+      if (tab === 'stats') renderStats();
+    }
+
+    window.onload = async function() {
+      const restored = await loadState();
+      if (!restored) initConfig();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "uso-u11-coach",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application de suivi de match pour Coach USO U11",
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  }
+}
